@@ -227,7 +227,7 @@ function PhoneChrome({ children, navTabs, navActive, sub, subActive, onSub, show
       {navTabs && (
         <div className="flex gap-4 px-4 text-[14px] overflow-x-auto no-scrollbar border-b border-[#D9D9D9]">
           {navTabs.map((t) => (
-            <button key={t} onClick={() => { const id = NAV_TARGET[t]; if (id && t !== navActive && window.__goTo) window.__goTo(id); }} className={`pb-2 shrink-0 ${t === navActive ? "text-[#1A1A1A] font-bold border-b-2 border-[#1A1A1A]" : "text-[#8C8C8C] font-medium"}`}>{t}</button>
+            <button key={t} onClick={() => { const id = NAV_TARGET[t]; if (id && t !== navActive && window.__goTo) window.__goTo(id); }} className={`pb-2 shrink-0 relative ${t === navActive ? "text-[#1A1A1A] font-bold border-b-2 border-[#1A1A1A]" : "text-[#8C8C8C] font-medium"}`}>{t}{t === "TradFi" && <span data-testid="new-badge" className="inline-block align-top ml-0.5 -mt-0.5 text-[9px] font-bold leading-none text-white rounded-full px-1 py-[2px]" style={{ background: "#F5222D" }}>NEW</span>}</button>
           ))}
         </div>
       )}
@@ -2759,6 +2759,8 @@ function P2_TradFiOverview({ demoState, following, toggleFollow, openAsset, open
   const [sectorTab, setSectorTab] = useState("industry");
   const [usSess, setUsSess] = useState("盘中交易");
   const [modalSeen, setModalSeen] = useState(false);
+  const [introSeen, setIntroSeenS] = useState(!!window.__tfIntroSeen);
+  const setIntroSeen = (v) => { window.__tfIntroSeen = v; setIntroSeenS(v); };
   const view = stack[stack.length - 1];
   const push = (v) => setStack((s) => [...s, v]);
   const back = () => setStack((s) => (s.length > 1 ? s.slice(0, -1) : s));
@@ -2770,6 +2772,16 @@ function P2_TradFiOverview({ demoState, following, toggleFollow, openAsset, open
       <PhoneChrome key="main" navTabs={NAV_TABS} navActive="TradFi" sub={TF_SUBS} subActive="总览"
         onSub={tfNav(goTo)}>
         <Frame demoState={demoState}>
+          {!introSeen && (
+            <div data-testid="new-feature-banner" className="mx-4 mt-3 rounded-[12px] px-3 py-2.5 flex items-start gap-2" style={{ background: BRAND_LIGHT }}>
+              <span className="shrink-0 text-[10px] font-bold text-white rounded-full px-1.5 py-[3px] mt-0.5" style={{ background: "#F5222D" }}>新功能</span>
+              <div className="flex-1 min-w-0">
+                <div className="text-[13px] font-bold text-[#1A1A1A]">TradFi 行情总览上线</div>
+                <div className="text-[11px] text-[#595959] mt-0.5">一站查看美股大盘、板块、宏观指标与大师持仓，点击卡片即可进入详情。</div>
+              </div>
+              <button data-testid="new-feature-close" onClick={() => setIntroSeen(true)} className="shrink-0 text-[11px] font-medium px-2 py-1 rounded-full bg-white" style={{ color: BRAND }}>知道了</button>
+            </div>
+          )}
           <SectionHead title="大盘指数" />
           <MarketIndexModule openAsset={openAsset} openStock={openStock} sess={usSess} setSess={setUsSess} />
           <DistModule onMore={() => push({ t: "dist" })} />
@@ -4425,7 +4437,7 @@ function PageFrame({ p, children }) {
 function App() {
   const [mode, setMode] = useState("journey");
   const [role, setRole] = useState("user");
-  const [activePage, setActivePage] = useState("p1");
+  const [activePage, setActivePage] = useState("p2");
   const [demoState, setDemoState] = useState("default");
   const [following, setFollowing] = useState(false);
   const [chip3, setChip3] = useState("全部");
