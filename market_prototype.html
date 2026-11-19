@@ -227,7 +227,7 @@ function PhoneChrome({ children, navTabs, navActive, sub, subActive, onSub, show
       {navTabs && (
         <div className="flex gap-4 px-4 text-[14px] overflow-x-auto no-scrollbar border-b border-[#D9D9D9]">
           {navTabs.map((t) => (
-            <button key={t} onClick={() => { const id = NAV_TARGET[t]; if (id && t !== navActive && window.__goTo) window.__goTo(id); }} className={`pb-2 shrink-0 relative ${t === navActive ? "text-[#1A1A1A] font-bold border-b-2 border-[#1A1A1A]" : "text-[#8C8C8C] font-medium"}`}>{t}{t === "TradFi" && <span data-testid="new-badge" className="inline-block align-top ml-0.5 -mt-0.5 text-[9px] font-bold leading-none text-white rounded-full px-1 py-[2px]" style={{ background: "#F5222D" }}>NEW</span>}</button>
+            <button key={t} onClick={() => { const id = NAV_TARGET[t]; if (id && t !== navActive && window.__goTo) window.__goTo(id); }} className={`pb-2 shrink-0 ${t === navActive ? "text-[#1A1A1A] font-bold border-b-2 border-[#1A1A1A]" : "text-[#8C8C8C] font-medium"}`}>{t}</button>
           ))}
         </div>
       )}
